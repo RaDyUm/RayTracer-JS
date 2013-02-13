@@ -1,7 +1,7 @@
 {
       "Window":{
-         "Width":1440,
-         "Height":900
+         "Width":640,
+         "Height":480
       },
       "Eye":{
          "X":0,
@@ -14,12 +14,5 @@
          "Z":250,
          "Size":500,
          "Color":"#FF0000"
-      },
-      "Light":{
-         "X":100,
-         "Y":100,
-         "Z":100,
-         "Color":"#FFFFFF",
-         "Strong":100
       }
   }
