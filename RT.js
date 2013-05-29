@@ -34,6 +34,7 @@ var RT = {
 	},
 
 	EachPix: function() {
+		console.log(this.Scene.S2.Type);
 		for (this.Y = 0; this.Y < this.Scene.Window.Height; this.Y++)
 		{
 			for (this.X = 0; this.X < this.Scene.Window.Width; this.X++)
@@ -60,31 +61,25 @@ var RT = {
 
 	GetPixelColor: function() {
 		var Vector = new Vect();
-		Vector.X = 150;
-		Vector.Y = (this.Scene.Window.Height / 2) - this.Y;
-		Vector.Z = (this.Scene.Window.Width / 2) - this.X;
-		Vector = this.Normalize(Vector);
+		Vector.X = 100;
+		Vector.Y = (this.Scene.Window.Width / 2) - this.X;
+		Vector.Z = (this.Scene.Window.Height / 2) - this.Y;
+		//Vector = this.Normalize(Vector);
 
-		var stock = 100;
 		for (var Obj in this.Scene) {
 			this.Current = this.Scene[Obj];
 			if (this.Current.Type == "Sphere") {
 				this.ItrSphere(Vector);
 			}
-			/*else if (this.Current.Type == "Plan") {
-				this.ItrPlan(Vector);
-			}*/
 
-			if (this.K > 0.0000001 && this.K < stock) {
-				stock = this.K;
-				this.Res = this.K;
+			/*if (this.K > 0.0000001) {
+				console.log(this.K);
+				this.Color = this.Current.Color;
 			}
+			else {
+				this.Color = "#000000";
+			}*/
 		}
-
-		if (this.Res > 0.00000000001)
-			this.Color = this.Current.Color;
-		else
-			this.Color = "#000000";
 	},
 
 	ItrSphere: function(Vector) {
@@ -101,7 +96,13 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y) 
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
-		if (Eq.Delta > 0.00000001)
+		if (Eq.Delta == 0)
+			this.Color = this.Current.Color;
+		else if (Eq.Delta > 0)
+			this.Color = this.Current.Color;
+		else if (Eq.Delta < 0)
+			this.Color = "#000000";
+		/*if (Eq.Delta > 0.00000001)
 		{
 			Eq.K1 = (-Eq.B - Math.sqrt(Eq.Delta)) / (2 * Eq.A);
 			Eq.K2 = (-Eq.B + Math.sqrt(Eq.Delta)) / (2 * Eq.A);
@@ -110,8 +111,8 @@ var RT = {
 				this.K = Eq.K1;
 			else
 				this.K = Eq.K2;
-			this.GetKCoor(Vector);
-		}
+			//this.GetKCoor(Vector);
+		}*/
 	},
 
 	ItrPlan: function(Vector) {
