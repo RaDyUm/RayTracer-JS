@@ -13,6 +13,10 @@ function Equation() {
 	this.K2 = 0;
 }
 
+	/*************************************************************
+	******************** THE REAL DEAL IS HERE *******************
+	*************************************************************/
+
 var RT = {
 
 	Ctx: null,
@@ -33,6 +37,9 @@ var RT = {
 		this.EachPix();
 	},
 
+	/*
+	**	We call drawScene function for each pixel of the window
+	*/
 	EachPix: function() {
 		console.log(this.Scene.S2.Type);
 		for (this.Y = 0; this.Y < this.Scene.Window.Height; this.Y++)
@@ -44,6 +51,9 @@ var RT = {
 		}
 	},
 
+	/*
+	**	Initialisation of the canvas object
+	*/
 	StartCanvas: function() {
 		$("<canvas/>", {
 	    	"id": "window"
@@ -53,10 +63,13 @@ var RT = {
 		this.Ctx = document.getElementById('window').getContext("2d");
 	},
 
+	/*
+	**	Get the color for the pixel and put it in the canvas
+	*/
 	DrawScene: function() {
-		this.GetPixelColor(); 						// On appelle la méthode qui récupére la couleur
-		this.Ctx.fillStyle = this.Color; 			// On set la couleur du pixel
-		this.Ctx.fillRect(this.X, this.Y, 1, 1);  	// On colorise le pixel sur l'image
+		this.GetPixelColor();
+		this.Ctx.fillStyle = this.Color;
+		this.Ctx.fillRect(this.X, this.Y, 1, 1);
 	},
 
 	GetPixelColor: function() {
@@ -68,6 +81,10 @@ var RT = {
 
 		for (var Obj in this.Scene) {
 			this.Current = this.Scene[Obj];
+			if (this.Current.Type == "Plan") {
+				this.ItrPlan(Vector);
+			}
+
 			if (this.Current.Type == "Sphere") {
 				this.ItrSphere(Vector);
 			}
@@ -81,6 +98,10 @@ var RT = {
 			}*/
 		}
 	},
+
+	/*************************************************************
+	*************** OBJECTS INTERSECTIONS FUNCTIONS **************
+	*************************************************************/
 
 	ItrSphere: function(Vector) {
 		Eq = new Equation();
@@ -116,10 +137,19 @@ var RT = {
 	},
 
 	ItrPlan: function(Vector) {
-		this.K = -this.Scene.Eye.Z / Vector.Z;
-		if (this.K > 0.0000001)
-			this.GetKCoor(Vector);
+		this.K = (this.Scene.Eye.Z / Vector.Z) * -1;
+		if (this.K == 0)
+			this.Color = this.Current.Color;
+		else if (this.K > 0)
+			this.Color = this.Current.Color;
+		else if (this.K < 0)
+			this.Color = "#000000";
+			
 	},
+
+	/******************************************************************
+	*************** ROTATIONS AND TRANSLATIONS FUNCTIONS **************
+	******************************************************************/
 
 	GetKCoor: function (Vector) {
 		this.KX = this.Scene.Eye.X + (this.K * Vector.X);
