@@ -41,7 +41,6 @@ var RT = {
 	**	We call drawScene function for each pixel of the window
 	*/
 	EachPix: function() {
-		console.log(this.Scene.S2.Type);
 		for (this.Y = 0; this.Y < this.Scene.Window.Height; this.Y++)
 		{
 			for (this.X = 0; this.X < this.Scene.Window.Width; this.X++)
@@ -73,6 +72,7 @@ var RT = {
 	},
 
 	GetPixelColor: function() {
+		this.K = 300;
 		var Vector = new Vect();
 		Vector.X = 100;
 		Vector.Y = (this.Scene.Window.Width / 2) - this.X;
@@ -81,22 +81,24 @@ var RT = {
 
 		for (var Obj in this.Scene) {
 			this.Current = this.Scene[Obj];
-			if (this.Current.Type == "Plan") {
-				this.ItrPlan(Vector);
-			}
+
 
 			if (this.Current.Type == "Sphere") {
 				this.ItrSphere(Vector);
 			}
 
-			/*if (this.K > 0.0000001) {
-				console.log(this.K);
+			if (this.Current.Type == "Plan") {
+				this.ItrPlan(Vector);
+			}
+
+			if (this.Current.K > 0 && this.Current.K < this.K) {
+				this.K = this.Current.K;
 				this.Color = this.Current.Color;
 			}
-			else {
-				this.Color = "#000000";
-			}*/
 		}
+
+		if (this.K == 300)
+			this.Color = "#000000";
 	},
 
 	/*************************************************************
@@ -117,34 +119,35 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y) 
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
-		if (Eq.Delta == 0)
+		/*if (Eq.Delta == 0)
 			this.Color = this.Current.Color;
 		else if (Eq.Delta > 0)
 			this.Color = this.Current.Color;
 		else if (Eq.Delta < 0)
-			this.Color = "#000000";
-		/*if (Eq.Delta > 0.00000001)
-		{
+			this.Color = "#000000";*/
+
+		if (Eq.Delta > 0.00000001) {
+
 			Eq.K1 = (-Eq.B - Math.sqrt(Eq.Delta)) / (2 * Eq.A);
 			Eq.K2 = (-Eq.B + Math.sqrt(Eq.Delta)) / (2 * Eq.A);
 
+			if (Eq.K1 < 0)
+				Eq.K1 *= -1;
+			if (Eq.K2 < 0)
+				Eq.K2 *= -1;
+
 			if (Eq.K1 < Eq.K2)
-				this.K = Eq.K1;
+				this.Current.K = Eq.K1;
 			else
-				this.K = Eq.K2;
+				this.Current.K = Eq.K2;
 			//this.GetKCoor(Vector);
-		}*/
+		} else {
+			this.Current.K = -10;
+		}
 	},
 
 	ItrPlan: function(Vector) {
-		this.K = (this.Scene.Eye.Z / Vector.Z) * -1;
-		if (this.K == 0)
-			this.Color = this.Current.Color;
-		else if (this.K > 0)
-			this.Color = this.Current.Color;
-		else if (this.K < 0)
-			this.Color = "#000000";
-			
+		this.Current.K = (this.Scene.Eye.Z / Vector.Z) * -1;
 	},
 
 	/******************************************************************

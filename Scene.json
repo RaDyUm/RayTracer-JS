@@ -6,16 +6,23 @@
    },
    "Eye":{
       "Type":"Eye",
-      "X":100,
+      "X":30,
       "Y":0,
-      "Z":0
+      "Z":5
    },
-   "S2":{
-      "Type":"Plan",
+   "S1":{
+      "Type":"Sphere",
       "X":0,
       "Y":0,
       "Z":0,
       "Radius":20,
+      "Color":"#00FF00"
+   },
+   "P1":{
+      "Type":"Plan",
+      "X":0,
+      "Y":0,
+      "Z":0,
       "Color":"#FF0000"
    }
 }
