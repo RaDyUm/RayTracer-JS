@@ -109,9 +109,9 @@ var RT = {
 		Eq = new Equation();
 
 		// Translation for sphere
-		/*var vx = this.Scene.Eye.X - this.Current.X;
-		var vy = this.Scene.Eye.Y - this.Current.Y;
-		var vz = this.Scene.Eye.Z - this.Current.Z;*/
+		Vector.X -= this.Scene.Eye.X - this.Current.X;
+		Vector.Y -= this.Scene.Eye.Y - this.Current.Y;
+		Vector.Z -= this.Scene.Eye.Z - this.Current.Z;
 		// End translation
 
 		Eq.A = (Vector.X * Vector.X) + (Vector.Y * Vector.Y) + (Vector.Z * Vector.Z);
