@@ -106,14 +106,9 @@ var RT = {
 		Eq = new Equation();
 
 		// Translation for sphere
-		Vector.X = this.Scene.Eye.X - this.X;
-		Vector.Y = this.Scene.Eye.Y - this.Y;
-		//Vector.Z = this.Scene.Eye.Z - this.Z;
-		/*********************************************************
-		********this.Z est pas défini et c'est bizare de**********
-		******réécraser les valeur des vecteur qu'on a déjà*******
-		*********************************************************/
-		//console.log(Vector.Y);
+		Vector.X -= this.Scene.Eye.X - this.Current.X;
+		Vector.Y -= this.Scene.Eye.Y - this.Current.Y;
+		Vector.Z -= this.Scene.Eye.Z - this.Current.Z;
 		// End translation
 
 		Eq.A = (Vector.X * Vector.X) + (Vector.Y * Vector.Y) + (Vector.Z * Vector.Z);
