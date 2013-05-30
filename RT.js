@@ -41,7 +41,6 @@ var RT = {
 	**	We call drawScene function for each pixel of the window
 	*/
 	EachPix: function() {
-		console.log(this.Scene.S2.Type);
 		for (this.Y = 0; this.Y < this.Scene.Window.Height; this.Y++)
 		{
 			for (this.X = 0; this.X < this.Scene.Window.Width; this.X++)
@@ -107,9 +106,14 @@ var RT = {
 		Eq = new Equation();
 
 		// Translation for sphere
-		/*var vx = this.Scene.Eye.X - this.Current.X;
-		var vy = this.Scene.Eye.Y - this.Current.Y;
-		var vz = this.Scene.Eye.Z - this.Current.Z;*/
+		Vector.X = this.Scene.Eye.X - this.X;
+		Vector.Y = this.Scene.Eye.Y - this.Y;
+		//Vector.Z = this.Scene.Eye.Z - this.Z;
+		/*********************************************************
+		********this.Z est pas défini et c'est bizare de**********
+		******réécraser les valeur des vecteur qu'on a déjà*******
+		*********************************************************/
+		//console.log(Vector.Y);
 		// End translation
 
 		Eq.A = (Vector.X * Vector.X) + (Vector.Y * Vector.Y) + (Vector.Z * Vector.Z);

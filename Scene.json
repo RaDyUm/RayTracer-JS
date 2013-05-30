@@ -7,15 +7,15 @@
    "Eye":{
       "Type":"Eye",
       "X":100,
-      "Y":0,
+      "Y":50,
       "Z":0
    },
    "S2":{
-      "Type":"Plan",
+      "Type":"Sphere",
       "X":0,
       "Y":0,
       "Z":0,
-      "Radius":20,
+      "Radius":50,
       "Color":"#FF0000"
    }
 }
