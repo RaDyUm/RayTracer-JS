@@ -72,7 +72,7 @@ var RT = {
 	},
 
 	GetPixelColor: function() {
-		this.K = 300;
+		this.K = 1000;
 		var Vector = new Vect();
 		Vector.X = 100;
 		Vector.Y = (this.Scene.Window.Width / 2) - this.X;
@@ -81,6 +81,7 @@ var RT = {
 
 		for (var Obj in this.Scene) {
 			this.Current = this.Scene[Obj];
+			this.Current.V = new Vect();
 
 
 			if (this.Current.Type == "Sphere") {
@@ -91,13 +92,17 @@ var RT = {
 				this.ItrPlan(Vector);
 			}
 
+			if (this.Current.Type == "Cylindre") {
+				this.ItrCyl(Vector);
+			}
+
 			if (this.Current.K > 0 && this.Current.K < this.K) {
 				this.K = this.Current.K;
 				this.Color = this.Current.Color;
 			}
 		}
 
-		if (this.K == 300)
+		if (this.K == 1000)
 			this.Color = "#000000";
 	},
 
@@ -105,26 +110,53 @@ var RT = {
 	*************** OBJECTS INTERSECTIONS FUNCTIONS **************
 	*************************************************************/
 
+	ItrCyl: function(Vector) {
+		Eq = new Equation();
+
+		// Translation for sphere
+		this.Current.V.X = Vector.X - (this.Scene.Eye.X - this.Current.X);
+		this.Current.V.Y = Vector.Y - (this.Scene.Eye.Y - this.Current.Y);
+		// End translation
+
+		Eq.A = (this.Current.V.X * this.Current.V.X) + (this.Current.V.Y * this.Current.V.Y);
+		Eq.B = 2 * ((this.Scene.Eye.X * this.Current.V.X) + (this.Scene.Eye.Y * this.Current.V.Y));
+		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y)) - (this.Current.Radius * this.Current.Radius));
+		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
+
+		if (Eq.Delta > 0.00000001) {
+
+			Eq.K1 = (-Eq.B - Math.sqrt(Eq.Delta)) / (2 * Eq.A);
+			Eq.K2 = (-Eq.B + Math.sqrt(Eq.Delta)) / (2 * Eq.A);
+
+			if (Eq.K1 < 0)
+				Eq.K1 *= -1;
+			if (Eq.K2 < 0)
+				Eq.K2 *= -1;
+
+			if (Eq.K1 < Eq.K2)
+				this.Current.K = Eq.K1;
+			else
+				this.Current.K = Eq.K2;
+			//this.GetKCoor(Vector);
+		} else {
+			this.Current.K = -10;
+		}
+	},
+
 	ItrSphere: function(Vector) {
 		Eq = new Equation();
 
 		// Translation for sphere
-		Vector.X -= this.Scene.Eye.X - this.Current.X;
-		Vector.Y -= this.Scene.Eye.Y - this.Current.Y;
-		Vector.Z -= this.Scene.Eye.Z - this.Current.Z;
+		this.Current.V.X = Vector.X - (this.Scene.Eye.X - this.Current.X);
+		this.Current.V.Y = Vector.Y - (this.Scene.Eye.Y - this.Current.Y);
+		this.Current.V.Z = Vector.Z - (this.Scene.Eye.Z - this.Current.Z);
 		// End translation
 
-		Eq.A = (Vector.X * Vector.X) + (Vector.Y * Vector.Y) + (Vector.Z * Vector.Z);
-		Eq.B = 2 * ((this.Scene.Eye.X * Vector.X) + (this.Scene.Eye.Y * Vector.Y) + (this.Scene.Eye.Z * Vector.Z));
+		Eq.A = (this.Current.V.X * this.Current.V.X) + (this.Current.V.Y * this.Current.V.Y) + (this.Current.V.Z * this.Current.V.Z);
+		Eq.B = 2 * ((this.Scene.Eye.X * this.Current.V.X) + (this.Scene.Eye.Y * this.Current.V.Y) + (this.Scene.Eye.Z * this.Current.V.Z));
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y) 
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
-		/*if (Eq.Delta == 0)
-			this.Color = this.Current.Color;
-		else if (Eq.Delta > 0)
-			this.Color = this.Current.Color;
-		else if (Eq.Delta < 0)
-			this.Color = "#000000";*/
 
 		if (Eq.Delta > 0.00000001) {
 
@@ -147,7 +179,12 @@ var RT = {
 	},
 
 	ItrPlan: function(Vector) {
-		this.Current.K = (this.Scene.Eye.Z / Vector.Z) * -1;
+
+		// translation for plan
+		this.Current.V.Z = Vector.Z - (this.Scene.Eye.Z - this.Current.Z);
+		// end of translation
+
+		this.Current.K = (this.Scene.Eye.Z / this.Current.V.Z) * -1;
 	},
 
 	/******************************************************************
@@ -170,6 +207,8 @@ var RT = {
 }
 
 $.getJSON ('Scene.json', function (Scene) {
+		var start = Date.now();
 		RT.Raytracing(Scene);
+		console.log((Date.now() - start) / 1000);
 	}
 );
