@@ -29,7 +29,8 @@
       "Type":"Cylindre",
       "X":40,
       "Y":95,
-      "Radius":20,
+      
+      "Radius":10,
       "Color":"#0000FF"
    }
 }

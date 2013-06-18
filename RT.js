@@ -37,9 +37,9 @@ var RT = {
 		this.EachPix();
 	},
 
-	/*
-	**	We call drawScene function for each pixel of the window
-	*/
+	/**************************************************************
+	*** We call drawScene function for each pixel of the window ***
+	**************************************************************/
 	EachPix: function() {
 		for (this.Y = 0; this.Y < this.Scene.Window.Height; this.Y++)
 		{
@@ -50,9 +50,9 @@ var RT = {
 		}
 	},
 
-	/*
-	**	Initialisation of the canvas object
-	*/
+	/**************************************************************
+	*********** Initialisation of the canvas object ***************
+	**************************************************************/
 	StartCanvas: function() {
 		$("<canvas/>", {
 	    	"id": "window"
@@ -62,9 +62,9 @@ var RT = {
 		this.Ctx = document.getElementById('window').getContext("2d");
 	},
 
-	/*
-	**	Get the color for the pixel and put it in the canvas
-	*/
+	/**************************************************************
+	***** Get the color for the pixel and put it in the canvas ****
+	***************************************************************/
 	DrawScene: function() {
 		this.GetPixelColor();
 		this.Ctx.fillStyle = this.Color;
@@ -123,24 +123,7 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
 
-		if (Eq.Delta > 0.00000001) {
-
-			Eq.K1 = (-Eq.B - Math.sqrt(Eq.Delta)) / (2 * Eq.A);
-			Eq.K2 = (-Eq.B + Math.sqrt(Eq.Delta)) / (2 * Eq.A);
-
-			if (Eq.K1 < 0)
-				Eq.K1 *= -1;
-			if (Eq.K2 < 0)
-				Eq.K2 *= -1;
-
-			if (Eq.K1 < Eq.K2)
-				this.Current.K = Eq.K1;
-			else
-				this.Current.K = Eq.K2;
-			//this.GetKCoor(Vector);
-		} else {
-			this.Current.K = -10;
-		}
+		this.getIntersectionPoint();
 	},
 
 	ItrSphere: function(Vector) {
@@ -157,6 +140,12 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y) 
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
+
+		this.getIntersectionPoint();
+		
+	},
+
+	getIntersectionPoint: function() {
 
 		if (Eq.Delta > 0.00000001) {
 
