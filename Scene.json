@@ -6,31 +6,31 @@
    },
    "Eye":{
       "Type":"Eye",
-      "X":30,
+      "X":100,
       "Y":0,
-      "Z":5
+      "Z":60
+   },
+   "S1":{
+      "Type":"Sphere",
+      "X":70,
+      "Y":90,
+      "Z":0,
+      "Radius":50,
+      "Color":"#00FF00"
    },
    "P1":{
       "Type":"Plan",
       "X":0,
       "Y":0,
-      "Z":-40,
+      "Z":-20,
       "Color":"#FF0000"
-   },
-     "S1":{
-      "Type":"Sphere",
-      "X":40,
-      "Y":-50,
-      "Z":-30,
-      "Radius":20,
-      "Color":"#00FF00"
    },
    "C1":{
       "Type":"Cylindre",
-      "X":40,
-      "Y":95,
-      
-      "Radius":10,
+      "X":70,
+      "Y":0,
+      "Z":0,
+      "Radius":50,
       "Color":"#0000FF"
    }
 }

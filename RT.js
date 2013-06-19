@@ -77,7 +77,6 @@ var RT = {
 		Vector.X = 100;
 		Vector.Y = (this.Scene.Window.Width / 2) - this.X;
 		Vector.Z = (this.Scene.Window.Height / 2) - this.Y;
-		//Vector = this.Normalize(Vector);
 
 		for (var Obj in this.Scene) {
 			this.Current = this.Scene[Obj];
@@ -98,12 +97,29 @@ var RT = {
 
 			if (this.Current.K > 0 && this.Current.K < this.K) {
 				this.K = this.Current.K;
-				this.Color = this.Current.Color;
+				this.GetLight(Vector);
 			}
 		}
 
 		if (this.K == 1000)
 			this.Color = "#000000";
+	},
+
+	GetLight: function(Vector) {
+		var Norm = this.GetNormObject();
+		var L = new Vect();
+		L.X = 500 - this.KX;
+		L.Y = 0 - this.KY;
+		L.Z = 100 - this.KZ;
+		L = this.Normalize(L);
+		Norm = this.Normalize(Norm);
+		var CosA = ((Norm.X*L.X) + (Norm.Y*L.Y) + (Norm.Z*L.Z));
+		if (CosA <= 0)
+			this.Color = "#000000";
+		else {
+			var rgb = this.hexToRgb(this.Current.Color);
+			this.Color = this.rgbToHex(rgb.r * CosA, rgb.g * CosA, rgb.b * CosA);
+		}
 	},
 
 	/*************************************************************
@@ -113,7 +129,7 @@ var RT = {
 	ItrCyl: function(Vector) {
 		Eq = new Equation();
 
-		// Translation for sphere
+		// Translation for cylindre
 		this.Current.V.X = Vector.X - (this.Scene.Eye.X - this.Current.X);
 		this.Current.V.Y = Vector.Y - (this.Scene.Eye.Y - this.Current.Y);
 		// End translation
@@ -123,7 +139,7 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
 
-		this.getIntersectionPoint();
+		this.getIntersectionPoint(Vector);
 	},
 
 	ItrSphere: function(Vector) {
@@ -141,11 +157,11 @@ var RT = {
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
 
-		this.getIntersectionPoint();
+		this.getIntersectionPoint(Vector);
 		
 	},
 
-	getIntersectionPoint: function() {
+	getIntersectionPoint: function(Vector) {
 
 		if (Eq.Delta > 0.00000001) {
 
@@ -161,7 +177,7 @@ var RT = {
 				this.Current.K = Eq.K1;
 			else
 				this.Current.K = Eq.K2;
-			//this.GetKCoor(Vector);
+			this.GetKCoor(Vector);
 		} else {
 			this.Current.K = -10;
 		}
@@ -174,6 +190,7 @@ var RT = {
 		// end of translation
 
 		this.Current.K = (this.Scene.Eye.Z / this.Current.V.Z) * -1;
+		this.GetKCoor(Vector);
 	},
 
 	/******************************************************************
@@ -181,9 +198,9 @@ var RT = {
 	******************************************************************/
 
 	GetKCoor: function (Vector) {
-		this.KX = this.Scene.Eye.X + (this.K * Vector.X);
-		this.KY = this.Scene.Eye.Y + (this.K * Vector.Y);
-		this.KZ = this.Scene.Eye.Z + (this.K * Vector.Z);
+		this.KX = this.Scene.Eye.X + (this.Current.K * Vector.X);
+		this.KY = this.Scene.Eye.Y + (this.Current.K * Vector.Y);
+		this.KZ = this.Scene.Eye.Z + (this.Current.K * Vector.Z);
 	},
 
 	Normalize : function (Vector) {
@@ -192,6 +209,41 @@ var RT = {
 		Vector.Y = Vector.Y * id;
 		Vector.Z = Vector.Z * id;
 		return Vector;
+	},
+
+	GetNormObject: function() {
+		var Norm = new Vect();
+		if (this.Current.Type == "Sphere") {
+			Norm.X = this.KX;
+			Norm.Y = this.KY;
+			Norm.Z = this.KZ;
+		}
+
+		if (this.Current.Type == "Cylindre") {
+			Norm.X = this.KX;
+			Norm.Y = this.KY;
+			Norm.Z = 0
+		}
+
+		if (this.Current.Type == "Plan") {
+			Norm.X = this.KX;
+			Norm.Y = this.KY;
+			Norm.Z = this.KZ;
+		}
+		return Norm;
+	},
+
+	hexToRgb: function(hex) {
+	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	    return result ? {
+	        r: parseInt(result[1], 16),
+	        g: parseInt(result[2], 16),
+	        b: parseInt(result[3], 16)
+	    } : null;
+	},
+
+	rgbToHex: function(r, g, b) {
+    	return "#" + ((1 << 24) + (parseInt(r) << 16) + (parseInt(g) << 8) + parseInt(b)).toString(16).slice(1);
 	}
 }
 
