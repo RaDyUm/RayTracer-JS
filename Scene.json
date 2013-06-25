@@ -1,22 +1,46 @@
 {
    "Window":{
       "Type":"Window",
-      "Width":640,
-      "Height":480
+      "Width":1280,
+      "Height":800
    },
    "Eye":{
       "Type":"Eye",
       "X":100,
       "Y":0,
-      "Z":60
+      "Z":20
    },
    "S1":{
       "Type":"Sphere",
       "X":70,
-      "Y":90,
+      "Y":-290,
       "Z":0,
       "Radius":50,
       "Color":"#00FF00"
+   },
+   "S2":{
+      "Type":"Sphere",
+      "X":40,
+      "Y":-100,
+      "Z":0,
+      "Radius":50,
+      "Color":"#A0F500"
+   },
+   "S3":{
+      "Type":"Sphere",
+      "X":100,
+      "Y":300,
+      "Z":0,
+      "Radius":70,
+      "Color":"#FF5C16"
+   },
+   "S4":{
+      "Type":"Sphere",
+      "X":70,
+      "Y":100,
+      "Z":0,
+      "Radius":50,
+      "Color":"#FFE41C"
    },
    "P1":{
       "Type":"Plan",
@@ -28,9 +52,17 @@
    "C1":{
       "Type":"Cylindre",
       "X":70,
-      "Y":0,
+      "Y":-150,
       "Z":0,
       "Radius":50,
       "Color":"#0000FF"
+   },
+   "C2":{
+      "Type":"Cylindre",
+      "X":70,
+      "Y":300,
+      "Z":50,
+      "Radius":50,
+      "Color":"#FF16C4"
    }
 }
