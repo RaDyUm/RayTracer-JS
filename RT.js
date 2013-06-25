@@ -72,6 +72,7 @@ var RT = {
 	},
 
 	GetPixelColor: function() {
+<<<<<<< HEAD
 		this.K = 1000;
 		var Vector = new Vect();
 		Vector.X = 100;
@@ -120,6 +121,9 @@ var RT = {
 			var rgb = this.hexToRgb(this.Current.Color);
 			this.Color = this.rgbToHex(rgb.r * CosA, rgb.g * CosA, rgb.b * CosA);
 		}
+
+		if (this.K == 300)
+			this.Color = "#000000";
 	},
 
 	/*************************************************************
@@ -156,7 +160,6 @@ var RT = {
 		Eq.C = (((this.Scene.Eye.X * this.Scene.Eye.X) + (this.Scene.Eye.Y * this.Scene.Eye.Y) 
 			+ (this.Scene.Eye.Z * this.Scene.Eye.Z)) - (this.Current.Radius * this.Current.Radius));
 		Eq.Delta = (Eq.B * Eq.B) - (4 * (Eq.A * Eq.C));
-
 		this.getIntersectionPoint(Vector);
 		
 	},
